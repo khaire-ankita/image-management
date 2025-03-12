@@ -7,18 +7,19 @@ import { UserModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ImageModule } from './image/image.module';
 import { Image } from './image/entities/image.entity';
-
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'Mysql@2025',
-      database: 'my_db',
-      entities: [User,Image],
+      host: process.env.host || '',
+      port: Number(process.env.port) || 0,
+      username: process.env.username || '',
+      password: process.env.password || '',
+      database: process.env.database || '',
+      entities: [User, Image],
       synchronize: true,
     }),
     UserModule,
@@ -28,5 +29,4 @@ import { Image } from './image/entities/image.entity';
   controllers: [AppController],
   providers: [AppService],
 })
-
 export class AppModule {}
